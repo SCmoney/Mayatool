@@ -2,75 +2,75 @@ import maya.cmds as pm
 
 def ui():
     
-    if pm.window('Tools', exists = True):#this prevents duplicate windows
+    #this prevents duplicate windows
+    if pm.window('Tools', exists = True):
         pm.deleteUI('Tools')
     
     #variables    
-    icon_width = width = 50
+    icon_width = width = 40
     icon_height = height = 40
     c_width = width = 100
     c_height = height = 30
-    bgcolor = bgc = [.5, .5, .5]    
+    bgcolor = bgc = [.5, .5, .5]       
     
-    
-    pm.window('Tools', sizeable = False, resizeToFitChildren = True, minimizeButton = False, maximizeButton = False)      
+    pm.window('Tools', sizeable = True, resizeToFitChildren = True, minimizeButton = False, maximizeButton = False)      
     pm.showWindow('Tools')
-    pm.columnLayout(adj = False)
-    #pm.dockControl(label = 'Tools', area = 'right', content = 'Tools', allowedArea = 'all')  
-           
-    pm.frameLayout('Selection', collapsable = True)
-    pm.rowColumnLayout('Col', numberOfColumns = 4)
+    tabs = pm.tabLayout(innerMarginWidth=5, innerMarginHeight=5)
+    
+    #Tab 1
+    child1 = pm.rowColumnLayout('Poly')       
+    pm.frameLayout('Selection', collapsable = False)
+    pm.rowColumnLayout('Col', numberOfColumns = 5)
     pm.iconTextButton(style = 'iconOnly', image1 = 'vertex_NEX.png', w = icon_width, h = icon_height, bgc = bgcolor, command = vertex)
     pm.iconTextButton(style = 'iconOnly', image1 = 'edges_NEX.png',  w = icon_width, h = icon_height, bgc = bgcolor, command = edge)
     pm.iconTextButton(style = 'iconOnly', image1 = 'faces_NEX.png',  w = icon_width, h = icon_height, bgc = bgcolor, command = face)
     pm.iconTextButton(style = 'iconOnly', image1 = 'object_NEX.png', w = icon_width, h = icon_height, bgc = bgcolor, command = element)
-    pm.setParent( '..' )
+    pm.iconTextButton(style = 'iconOnly', w = icon_width, h = icon_height, bgc = bgcolor, command = element)    
     pm.setParent( '..' )
     
-    pm.frameLayout('Convert Selection', collapsable = True)
-    pm.rowColumnLayout('Col', numberOfColumns = 4)
+    pm.frameLayout('Convert Selection', collapsable = False)
+    pm.rowColumnLayout('Col', numberOfColumns = 5)
     pm.iconTextButton(style = 'iconOnly', image1 = 'vertex_NEX.png',imageOverlayLabel = 'VERT', w = icon_width, h = icon_height, bgc = bgcolor, command = convert_vertex)
     pm.iconTextButton(style = 'iconOnly', image1 = 'edges_NEX.png',imageOverlayLabel = 'EDGE',  w = icon_width, h = icon_height, bgc = bgcolor, command = convert_edge)
     pm.iconTextButton(style = 'iconOnly', image1 = 'faces_NEX.png',imageOverlayLabel = 'FACE',  w = icon_width, h = icon_height, bgc = bgcolor, command = convert_face)
-    pm.iconTextButton(style = 'iconOnly', w = icon_width, h = icon_height, bgc = bgcolor, command = movetoggle)
-    pm.setParent( '..' )
-    pm.setParent( '..' )
-    
+    pm.iconTextButton(style = 'iconOnly', image1 = 'polyConvertToEdgeRing.png',imageOverlayLabel = 'RING',  w = icon_width, h = icon_height, bgc = bgcolor, command = ring)
+    pm.iconTextButton(style = 'iconOnly', image1 = 'polyConvertToEdgeLoop.png',imageOverlayLabel = 'LOOP',  w = icon_width, h = icon_height, bgc = bgcolor, command = loop)
+    pm.setParent( '..' )    
   
-    pm.frameLayout('Manipulator Axis Toggle', collapsable = True)
-    pm.rowColumnLayout('Col', numberOfColumns = 4)
+    pm.frameLayout('Manipulator Axis Toggle', collapsable = False)
+    pm.rowColumnLayout('Col', numberOfColumns = 5)
     pm.iconTextButton(style = 'iconOnly', image1 = 'move_M.png',               w = icon_width, h = icon_height, bgc = bgcolor, commandRepeatable = True, command = movetoggle)
     pm.iconTextButton(style = 'iconOnly', image1 = 'rotate_M.png',             w = icon_width, h = icon_height, bgc = bgcolor, commandRepeatable = True, command = rotatetoggle)
     pm.iconTextButton(style = 'iconOnly', image1 = 'scale_M.png',              w = icon_width, h = icon_height, bgc = bgcolor, commandRepeatable = True, command = scaletoggle)
     pm.iconTextButton(style = 'iconAndTextHorizontal', label = 'edge\nmove',   w = icon_width, h = icon_height, bgc = [.35,.6,.85], commandRepeatable = True, command = edge_constraint)
-    pm.setParent( '..' )
+    pm.iconTextButton(style = 'iconOnly', w = icon_width, h = icon_height, bgc = bgcolor, command = element)
     pm.setParent( '..' )
     
-    pm.frameLayout('Pivot                     Transform', collapsable = True)
-    pm.rowColumnLayout('Col', numberOfColumns = 5)
+    pm.frameLayout('Pivot/Transform', collapsable = False)
+    pm.rowColumnLayout('Col', numberOfColumns = 4)
     pm.iconTextButton(label = 'CP', imageOverlayLabel = 'CP', style = 'iconOnly', image1 = 'CenterPivot.png',         w = 50, h = icon_height, bgc = bgcolor, commandRepeatable = True, command = center_pivot)
     pm.iconTextButton(label = 'WCP',imageOverlayLabel = 'WCP', style = 'iconOnly', image1 = 'menuIconModify.png',     w = 50, h = icon_height, bgc = bgcolor, commandRepeatable = True, command = world_pivot)
     pm.iconTextButton(label = 'X',  imageOverlayLabel = 'XFORM', style = 'iconOnly', image1 = 'FreezeTransform.png',  w = 50, h = icon_height, bgc = bgcolor, commandRepeatable = True, command = freezetransform)
     pm.iconTextButton(label = 'His',imageOverlayLabel = 'HIST', style = 'iconOnly', image1 = 'DeleteHistory.png',     w = 50, h = icon_height, bgc = bgcolor, commandRepeatable = True, command = deletehistory)
     pm.setParent( '..' )
-    pm.setParent( '..' )
     
-                           
-    pm.frameLayout('Edit Geo', collapsable = True)
-    pm.rowColumnLayout('Col', numberOfColumns = 2, columnSpacing = [2, 1], rowSpacing = [2, 1])
-    pm.iconTextButton(label = 'Connect', style = 'iconAndTextHorizontal',image1 = 'polyConnectComponents.png', width = c_width, height = c_height, bgc = bgcolor, commandRepeatable = True, command = connect)
-    pm.iconTextButton(label = 'Cut', style = 'iconAndTextHorizontal',image1 = 'multiCut_NEX32.png',            width = c_width, height = c_height, bgc = bgcolor, commandRepeatable = True, command = cut)  
-    pm.iconTextButton(label = 'Edge loop', style = 'iconAndTextHorizontal', image1 = 'polySplitEdgeRing.png',  width = c_width, height = c_height, bgc = bgcolor, commandRepeatable = True, command = edge_loop)
-    pm.iconTextButton(label = 'Target weld',style = 'iconAndTextHorizontal', image1 = 'weld_NEX32.png',        width = c_width, height = c_height, bgc = bgcolor, commandRepeatable = True, command = target_weld)
-    pm.iconTextButton(label = 'Bridge', style = 'iconAndTextHorizontal', image1 = 'polyBridge.png',            width = c_width, height = c_height, bgc = bgcolor, commandRepeatable = True, command = bridge)
-    pm.iconTextButton(label = 'Merge', style = 'iconAndTextHorizontal', image1 = 'polyMerge.png',              width = c_width, height = c_height, bgc = bgcolor, commandRepeatable = True, command = merge_vertex)             
-    pm.iconTextButton(label = 'Duplicate', style = 'iconAndTextHorizontal', image1 = 'polyDuplicateFacet.png', width = c_width, height = c_height, bgc = bgcolor, commandRepeatable = True, command = dupe)   
-    pm.iconTextButton(label = 'Seperate', style = 'iconAndTextHorizontal', image1 = 'polySplitVertex.png',     width = c_width, height = c_height, bgc = bgcolor, commandRepeatable = True, command = separate)
-    pm.iconTextButton(label = 'Combine', style = 'iconAndTextHorizontal', image1 = 'polyUnite.png',            width = c_width, height = c_height, bgc = bgcolor, commandRepeatable = True, command = combine)             
-    pm.iconTextButton(label = 'Fill Hole', style = 'iconAndTextHorizontal', image1 = 'polyCloseBorder.png',    width = c_width, height = c_height, bgc = bgcolor, commandRepeatable = True, command = fill) 
-    pm.iconTextButton(label = 'Bevel', style = 'iconAndTextHorizontal', image1 = 'polyBevel.png',              width = c_width, height = c_height, bgc = bgcolor, commandRepeatable = True, command = beveledge)
-    pm.iconTextButton(label = '', style = 'iconAndTextHorizontal', width = c_width, height = c_height, bgc = bgcolor)
-    pm.setParent( '..' )
+    geo_width = width = 30
+    geo_height = height = 10                       
+    pm.frameLayout('Edit Geo', collapsable = False)
+    pm.gridLayout(numberOfColumns = 2, cellWidth=100, cellHeight = 30)
+    pm.iconTextButton(label = 'Connect', style = 'iconAndTextHorizontal',image1 = 'polyConnectComponents.png', width = geo_width, height = geo_height, bgc = bgcolor, commandRepeatable = True, command = connect)
+    pm.iconTextButton(label = 'Cut', style = 'iconAndTextHorizontal',image1 = 'multiCut_NEX32.png',            width = geo_width, height = geo_height, bgc = bgcolor, commandRepeatable = True, command = cut)  
+    pm.iconTextButton(label = 'Edge loop', style = 'iconAndTextHorizontal', image1 = 'polySplitEdgeRing.png',  width = geo_width, height = geo_height, bgc = bgcolor, commandRepeatable = True, command = edge_loop)
+    pm.iconTextButton(label = 'Target weld',style = 'iconAndTextHorizontal', image1 = 'weld_NEX32.png',        width = geo_width, height = geo_height, bgc = bgcolor, commandRepeatable = True, command = target_weld)
+    pm.iconTextButton(label = 'Bridge', style = 'iconAndTextHorizontal', image1 = 'polyBridge.png',            width = geo_width, height = geo_height, bgc = bgcolor, commandRepeatable = True, command = bridge)
+    pm.iconTextButton(label = 'Collapse', style = 'iconAndTextHorizontal', image1 = 'polyCollapseEdge.png',    width = geo_width, height = geo_height, bgc = bgcolor, commandRepeatable = True, command = collapse)             
+    pm.iconTextButton(label = 'Duplicate', style = 'iconAndTextHorizontal', image1 = 'polyDuplicateFacet.png', width = geo_width, height = geo_height, bgc = bgcolor, commandRepeatable = True, annotation = 'Duplicates selected faces', command = dupe)   
+    pm.iconTextButton(label = 'Merge', style = 'iconAndTextHorizontal', image1 = 'polyMerge.png',              width = geo_width, height = geo_height, bgc = bgcolor, commandRepeatable = True, command = merge_vertex)             
+    pm.iconTextButton(label = 'Seperate', style = 'iconAndTextHorizontal', image1 = 'polySplitVertex.png',     width = geo_width, height = geo_height, bgc = bgcolor, commandRepeatable = True, command = separate)
+    pm.iconTextButton(label = 'Combine', style = 'iconAndTextHorizontal', image1 = 'polyUnite.png',            width = geo_width, height = geo_height, bgc = bgcolor, commandRepeatable = True, command = combine)             
+    pm.iconTextButton(label = 'Fill Hole', style = 'iconAndTextHorizontal', image1 = 'polyCloseBorder.png',    width = geo_width, height = geo_height, bgc = bgcolor, commandRepeatable = True, command = fill) 
+    pm.iconTextButton(label = 'Bevel', style = 'iconAndTextHorizontal', image1 = 'polyBevel.png',              width = geo_width, height = geo_height, bgc = bgcolor, commandRepeatable = True, command = beveledge)
+    #pm.iconTextButton(label = '', style = 'iconAndTextHorizontal', width = c_width, height = c_height, bgc = bgcolor)
     pm.setParent( '..' )
     
     x_bg = bgc =[.55,.55,.55]
@@ -78,7 +78,7 @@ def ui():
     z_bg = bgc =[.65,.65,.65]
     word_bg = bgc =[.45,.45,.45]
     m_width = width = 50   
-    pm.frameLayout('Mirror', collapsable = True)
+    pm.frameLayout('Mirror', collapsable = False)
     pm.rowColumnLayout('Col', numberOfColumns = 4, columnSpacing = [2, 1], rowSpacing = [2, 1])
     pm.iconTextButton(label = 'Copy', style = 'textOnly', width = 50, height = 20, bgc = word_bg)
     pm.button(label = 'X', width = m_width, height = 20, bgc = x_bg, command = mirror_copy_x)
@@ -93,44 +93,50 @@ def ui():
     #pm.button(label = 'Y', width = m_width, height = 20, bgc = y_bg, command = mirror_flip_y)
     #pm.button(label = 'Z', width = m_width, height = 20, bgc = z_bg, command = mirror_flip_z)
     pm.setParent( '..' )
-    pm.setParent( '..' )
 
-    pm.frameLayout('Polygon', collapsable = True)
-    pm.rowColumnLayout('Col', numberOfColumns = 2,columnSpacing = [2, 1], rowSpacing = [2, 1])
-    pm.iconTextButton(label = 'Soft', style = 'iconAndTextHorizontal', image1 = 'polySoftEdge.png',     width = c_width, height = c_height, bgc = bgcolor,commandRepeatable = True, command = softnormal)             
-    pm.iconTextButton(label = 'Hard', style = 'iconAndTextHorizontal', image1 = 'polyHardEdge.png',     width = c_width, height = c_height, bgc = bgcolor,commandRepeatable = True, command = hardnormal)
-    pm.iconTextButton(label = 'Flip face', style = 'iconAndTextHorizontal', image1 = 'polyNormal.png',  width = c_width, height = c_height, bgc = bgcolor,commandRepeatable = True, command = flipface)
-    pm.iconTextButton(label = 'Backface', style = 'iconAndTextHorizontal', image1 = 'polyNormal.png',   width = c_width, height = c_height, bgc = bgcolor,commandRepeatable = True, command = backfacecalling)
-    pm.iconTextButton(label = 'Grow', style = 'iconOnly', image1 = 'polyGrowSelection.png',imageOverlayLabel = 'GROW', width = c_width, height = c_height, bgc = bgcolor,commandRepeatable = True, command = grow)
-    pm.iconTextButton(label = 'Shrink', style = 'iconOnly', image1 = 'polyGrowSelection.png',imageOverlayLabel = 'SHRNK',width = c_width, height = c_height, bgc = bgcolor,commandRepeatable = True, command = shrink)
-    pm.setParent( '..' )
+    pm.frameLayout('Normals', collapsable = False)
+    pm.rowColumnLayout('Col', numberOfColumns = 5)   
+    pm.iconTextButton(style = 'iconOnly', image1 = 'polySoftEdge.png',imageOverlayLabel = 'SOFT', w = icon_width, h = icon_height, bgc = bgcolor,commandRepeatable = True, command = softnormal)
+    pm.iconTextButton(style = 'iconOnly', image1 = 'polyHardEdge.png',imageOverlayLabel = 'HARD', width = 40, height = c_height, bgc = bgcolor,commandRepeatable = True, command = hardnormal)
+    pm.iconTextButton(style = 'iconOnly', image1 = 'polyHardEdge.png',imageOverlayLabel = 'AUTO', width = 40, height = c_height, bgc = bgcolor,commandRepeatable = True, command = autonormal)
+    pm.iconTextButton(style = 'iconOnly', image1 = 'polyNormalSetToFace.png',imageOverlayLabel = 'RESET', width = 40, height = c_height, bgc = bgcolor,commandRepeatable = True, command = settoface)    
+    pm.iconTextButton(style = 'iconOnly', w = 40, h = c_height, bgc = bgcolor, command = element) 
+    pm.iconTextButton(style = 'iconOnly', image1 = 'polyNormal.png',imageOverlayLabel = 'FLIP', width = 40, height = c_height, bgc = bgcolor,commandRepeatable = True, command = flipface)
+    pm.iconTextButton(style = 'iconOnly', image1 = 'polyNormal.png',imageOverlayLabel = 'BFACE',   width = 40, height = c_height, bgc = bgcolor,commandRepeatable = True, command = backfacecalling)
+    pm.iconTextButton(label = 'Grow', style = 'iconOnly', image1 = 'polyGrowSelection.png',imageOverlayLabel = 'GROW', width = 40, height = c_height, bgc = bgcolor,commandRepeatable = True, command = grow)
+    pm.iconTextButton(label = 'Shrink', style = 'iconOnly', image1 = 'polyGrowSelection.png',imageOverlayLabel = 'SHRNK',width = 40, height = c_height, bgc = bgcolor,commandRepeatable = True, command = shrink)
+    pm.iconTextButton(style = 'iconOnly', w = 40, h = c_height, bgc = bgcolor, command = element)
     pm.setParent( '..' )  
     
     sh_height = height = 20        
-    pm.frameLayout('Show and Hide', collapsable = True)
+    pm.frameLayout('Show and Hide', collapsable = False)
     pm.rowColumnLayout('Col', numberOfColumns = 2, columnSpacing = [2, 1], rowSpacing = [2, 1])
     pm.iconTextButton(label = 'Show All', style = 'iconAndTextHorizontal', image1 = 'menuIconDisplay.png',     width = c_width, height = sh_height, bgc = bgcolor, command = show_all)             
     pm.iconTextButton(label = 'Hide All', style = 'iconAndTextHorizontal', image1 = 'menuIconDisplay.png',     width = c_width, height = sh_height, bgc = bgcolor, command = hide_all)             
     pm.iconTextButton(label = 'Show Selected', style = 'iconAndTextHorizontal', image1 = 'menuIconDisplay.png',width = c_width, height = sh_height, bgc = bgcolor, command = show_selected)             
-    pm.iconTextButton(label = 'Hide Selected', style = 'iconAndTextHorizontal', image1 = 'menuIconDisplay.png',width = c_width, height = sh_height, bgc = bgcolor, command = hide_selected)             
-    pm.setParent( '..' )
+    pm.iconTextButton(label = 'Hide Selected', style = 'iconAndTextHorizontal', image1 = 'menuIconDisplay.png',width = c_width, height = sh_height, bgc = bgcolor, command = hide_selected)            
     pm.setParent( '..' )
     
-    pm.frameLayout('MISC', collapsable = True)
+    pm.frameLayout('MISC', collapsable = False)
     pm.rowColumnLayout('Col', numberOfColumns = 3)
     pm.button(label = 'Ungroup', width = c_width, height = c_height, bgc = bgcolor, command = ungroupz)             
     pm.iconTextButton(label = 'Material', style = 'iconOnly',image1 = 'hypershadeIcon.png', w = 50, h = 30, bgc = [.4, .4, .4], command = material)
     pm.iconTextButton(label = 'Export', imageOverlayLabel = 'Exprt', style = 'iconOnly',image1 = 'menuIconFile.png', w = 50, h = 30, bgc = [.4, .4, .4], command = export)          
-    pm.setParent( '..' )
+    pm.setParent( child1)
     pm.setParent( '..' )
     
-    #pm.frameLayout('XYZ Location', collapsable = True)
-    #pm.rowColumnLayout('Col', numberOfColumns = 1, columnSpacing = [2, 4])
-    #pm.iconTextButton(label = 'XYZ:', style = 'textOnly', width = 20, height = 20, bgc = [.8,0,0], command = location_xyz)
-    #pm.attrFieldGrp(label = 'XYZ', columnAlign = [1 ,'left'],  columnWidth4 = [39,50,50,50])
-    #pm.setParent( '..' )
-    #pm.setParent( '..' )
-        
+    #Tab 2
+    child2 = cmds.rowColumnLayout(numberOfColumns=2)
+    pm.button('1')
+    pm.setParent( '..' )
+    
+    
+    #Tab 3
+    child3 = cmds.rowColumnLayout(numberOfColumns=2)
+
+    pm.tabLayout( tabs, edit=True, tabLabel=((child1, 'Poly        '), (child2, 'Two       '), (child3, 'Three      ')) )
+    
+  
 #----------------------Selection-------------------------------  
 def vertex(*args):#Select vertex
     pm.SelectVertexMask()    
@@ -146,14 +152,20 @@ def element(*args):#Select Element
     pm.SelectAll()
     
 #----------------------Convert Selection-----------------------  
-def convert_vertex(*args):#Select vertex
+def convert_vertex(*args):
     pm.ConvertSelectionToVertices()    
     
-def convert_edge(*args):#Select Edge
+def convert_edge(*args):
     pm.ConvertSelectionToEdges()
     
-def convert_face(*args):#Select Face
-    pm.ConvertSelectionToFaces()        
+def convert_face(*args):
+    pm.ConvertSelectionToFaces()     
+    
+def ring(*args):
+    pm.SelectEdgeRingSp()   
+    
+def loop(*args):
+    pm.SelectEdgeLoopSp()
 
 #-----------------------Cursor---------------------------------
 
@@ -208,58 +220,61 @@ def freezetransform(*args):#World Pivot 000
     pm.xform(cp = True)    
    
 #------------------------Edit Geo-------------------------------   
-def connect(*args):#Connect edges
+def connect(*args):
     pm.ConnectComponents()
     
-def cut(*args):#Connect edges
+def cut(*args):
     pm.MultiCutTool()
     
-def edge_loop(*args):#Edge loop
+def edge_loop(*args):
     pm.SplitEdgeRingTool()
        
-def target_weld(*args):#Target weld
+def target_weld(*args):
     pm.MergeVertexTool()
     
-def bridge(*args):#Bridge
+def bridge(*args):
     pm.polyBridgeEdge(divisions = 0)
      
-def merge_vertex(*args):#Merg
+def collapse(*args):
     pm.MergeToCenter(am = True) 
+        
+def merge_vertex(*args):
+    pm.polyMergeVertex(distance = .01)                 
    
-def dupe(*args):#Duplicate
+def dupe(*args):
     pm.select()
     pm.polyChipOff()
         
-def separate(*args):#Separate
+def separate(*args):
     pm.DetachComponent()
     pm.SeparatePolygon()
     pm.CenterPivot()
     pm.parent(world = True) 
         
-def combine(*args):#Combine
+def combine(*args):
     pm.polyUnite(centerPivot = True)
     pm.DeleteHistory() 
     
-def fill(*args):#Fill hole
+def fill(*args):
     pm.FillHole()    
 
-def beveledge(*args):#Bevel edge
+def beveledge(*args):
     pm.select()
     pm.polyBevel(offset = .1)     
  
 #-------------------------Mirror------------------------------------- 
 #Copy---------------------    
-def mirror_copy_x(*args):#Mirror copy, local X axis
+def mirror_copy_x(*args):
     
     pm.polyMirrorFace(direction = 0, worldSpace = False)
     pm.polySeparate()  
     
-def mirror_copy_y(*args):#Mirror copy, local Y axis
+def mirror_copy_y(*args):
     
     pm.polyMirrorFace(direction = 2, worldSpace = False, )
     pm.polySeparate()
     
-def mirror_copy_z(*args):#Mirror copy, local Z axis
+def mirror_copy_z(*args):
     pm.polyMirrorFace(direction = 4, worldSpace = False)
     pm.polySeparate()
     
@@ -302,22 +317,28 @@ def mirror_flip_z(*args):#Mirror flip, local Z axis
  
     
 #-------------------------Polygon------------------------------------ 
-def softnormal(*args):#Soft normal
+def softnormal(*args):
     pm.PolygonSoftenEdge()
     
-def hardnormal(*args):#Hard normal
+def hardnormal(*args):
     pm.PolygonHardenEdge()    
     
-def flipface(*args):#Flip face
+def autonormal(*args):
+    pm.PolygonSoftenHarden()    
+    
+def settoface(*args):
+    pm.polySetToFaceNormal()   
+    
+def flipface(*args):
     pm.ReversePolygonNormals()
     
-def backfacecalling(*args):#Backface calling
+def backfacecalling(*args):
     pm.ToggleBackfaceGeometry()  
     
-def grow(*args):#Backface calling
+def grow(*args):
     pm.polySelectConstraint(propagate = 1)  
     
-def shrink(*args):#Backface calling
+def shrink(*args):
     pm.polySelectConstraint(propagate = 2) 
     
 #-------------------------Show and Hide------------------------------ 
@@ -352,13 +373,10 @@ def location_xyz(*args):
     cmds.columnLayout()
     if selection != None and len(selection) >0:
         cmds.attrFieldGrp( attribute='%s.translate' % selection[0],label = 'XYZ', columnAlign = [1 ,'left'],  columnWidth4 = [40,50,50,50], precision = 5 )
-       
-        
-  
 
-
-          
-    
-    
-        
+    child2 = pm.rowColumnLayout('Two')    
+    pm.frameLayout('Next', collapsable = True)
+    pm.button()    
+    pm.setParent( '..' )
+                      
 ui()
